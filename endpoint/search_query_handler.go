@@ -27,6 +27,6 @@ func (s *SearchQueryHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	queries := uri.Query()
-	q := queries.Get("q")
-	http.Redirect(w, r, s.resolver.ParseQueryToRedirectLocation(q), http.StatusSeeOther)
+	searchQuery := queries.Get("q")
+	http.Redirect(w, r, s.resolver.ParseSearchQueryToRedirectLocation(searchQuery), http.StatusSeeOther)
 }
