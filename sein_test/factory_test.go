@@ -1,7 +1,7 @@
 package sein_test
 
 import (
-	"github.com/blazejsewera/sein/http"
+	"github.com/blazejsewera/sein/endpoint"
 	"github.com/blazejsewera/sein/resolver"
 	gohttp "net/http"
 )
@@ -11,9 +11,9 @@ const (
 	defaultSearch     = "https://example.com?q={{.Query}}"
 )
 
-func newSearchQueryHandler() *http.SearchQueryHandler {
+func newSearchQueryHandler() *endpoint.SearchQueryHandler {
 	r := resolver.New(defaultSearchHome, defaultSearch)
-	return http.NewSearchQueryHandler(r)
+	return endpoint.NewSearchQueryHandler(r)
 }
 
 func newHTTPClient() *gohttp.Client {

@@ -1,21 +1,18 @@
 package main
 
 import (
-	http2 "github.com/blazejsewera/sein/http"
+	"github.com/blazejsewera/sein/endpoint"
 	"github.com/blazejsewera/sein/monitor"
+	"github.com/blazejsewera/sein/resolver"
 	"log/slog"
-	"net/http"
+	gohttp "net/http"
 )
 
 func main() {
-	sr := &ServiceResolver{
-		defaultSearchHome: "https://sewera.cc/searxng",
-		defaultSearch:     "https://sewera.cc/searxng?q={{.Query}}",
-		services:          services,
-	}
-	sh := &http2.SearchQueryHandler{sr}
+	r := resolver.New("https://sewera.cc/searxng", "https://sewera.cc/searxng?q={{.Query}}")
+	searchQueryHandler := endpoint.NewSearchQueryHandler(r)
 	monitor.Log().Info("starting service", slog.Int("port", 8080))
-	err := http.ListenAndServe(":8080", sh)
+	err := gohttp.ListenAndServe(":8080", searchQueryHandler)
 	if err != nil {
 		monitor.Log().Fatal("cannot start http server", slog.String("err", err.Error()))
 	}
