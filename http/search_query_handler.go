@@ -46,7 +46,7 @@ func renderTemplateURI(templateString string, q string) string {
 		return ""
 	}
 	b := bytes.Buffer{}
-	err = t.ExecuteTemplate(&b, templateName, struct{ Query string }{q})
+	err = t.ExecuteTemplate(&b, templateName, struct{ Query string }{url.QueryEscape(q)})
 	if err != nil {
 		monitor.Log().Error("cannot execute template with query", slog.String("template", templateString), slog.String("query", q), slog.String("err", err.Error()))
 		return ""
