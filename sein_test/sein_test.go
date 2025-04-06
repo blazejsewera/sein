@@ -63,4 +63,21 @@ func TestRedirectToExternalService(t *testing.T) {
 			testRequest(t, client, s.URL, query, expectedLocation)
 		})
 	})
+
+	t.Run("when the search query includes a calculation expression (starts with an equals sign)", func(t *testing.T) {
+		t.Run("redirect to calculation service's homepage "+
+			"when there is no further query", func(t *testing.T) {
+			query := "="
+			expectedLocation := "https://rinkcalc.app"
+			testRequest(t, client, s.URL, query, expectedLocation)
+		})
+
+		t.Run("redirect and pass query to calculation service "+
+			"when there is an expression", func(t *testing.T) {
+			extQuery := "1inch to cm"
+			query := "=" + extQuery
+			expectedLocation := "https://rinkcalc.app?q=" + url.QueryEscape(extQuery)
+			testRequest(t, client, s.URL, query, expectedLocation)
+		})
+	})
 }

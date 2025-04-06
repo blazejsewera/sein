@@ -31,18 +31,31 @@ func (r *Resolver) ParseSearchQueryToRedirectLocation(searchQuery string) string
 	}
 
 	if strings.HasPrefix(searchQuery, "!") {
-		cmd, query, found := strings.Cut(searchQuery, " ")
-		serviceKey := strings.TrimPrefix(cmd, "!")
-		service, exists := r.services[serviceKey]
-		if !exists {
-			return r.defaultSearchService.RenderTemplateURI(searchQuery)
-		}
-
-		if !found || query == "" {
-			return service.Homepage()
-		}
-		return service.RenderTemplateURI(query)
+		extQuery := strings.TrimPrefix(searchQuery, "!")
+		return r.parseBangCommand(extQuery)
+	} else if strings.HasPrefix(searchQuery, "=") {
+		expression := strings.TrimSpace(strings.TrimPrefix(searchQuery, "="))
+		return r.parseCalculationExpression(expression)
 	}
 
 	return r.defaultSearchService.RenderTemplateURI(searchQuery)
+}
+
+func (r *Resolver) parseBangCommand(searchQuery string) string {
+	cmd, query, found := strings.Cut(searchQuery, " ")
+	service, exists := r.services[cmd]
+	if !exists {
+		return r.defaultSearchService.RenderTemplateURI(searchQuery)
+	}
+	if !found || query == "" {
+		return service.Homepage()
+	}
+	return service.RenderTemplateURI(query)
+}
+
+func (r *Resolver) parseCalculationExpression(expression string) string {
+	if expression == "" {
+		return r.calculationService.Homepage()
+	}
+	return r.calculationService.RenderTemplateURI(expression)
 }
