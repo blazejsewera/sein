@@ -26,7 +26,7 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: ${{ github.actor }}
+          username: sewera
           password: ${{ secrets.GHCR_TOKEN }}
 
       - name: Extract Docker tags
@@ -41,7 +41,7 @@ jobs:
           fi
           releases=""
           for tag in "${tags[@]}"; do
-            releases="${releases:+$releases,}ghcr.io/${{ github.actor }}/sein:$tag"
+            releases="${releases:+$releases,}ghcr.io/sewera/sein:$tag"
           done
           echo "releases=$releases" >> "$GITHUB_OUTPUT"
 
