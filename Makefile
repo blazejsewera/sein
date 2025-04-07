@@ -19,10 +19,6 @@ docker-build:
 	@docker build -f "$(CONTAINERFILE)" -t "$(SHORT_NAME)" .
 	@echo "$(PREFIX) docker image built"
 
-_build-binary-in-docker:
-	@go build -o "/$(SHORT_NAME)" "$(PROJECT)"
-	@echo "$(PREFIX) binary /$(SHORT_NAME) built for docker"
-
 run:
 	@go run "$(PROJECT)"
 
